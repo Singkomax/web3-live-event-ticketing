@@ -1,0 +1,35 @@
+{
+  "name": "web3-live-event-ticketing",
+  "version": "0.0.1",
+  "description": "A full stack application for a web3 live event ticketing",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Singkomax/web3-live-event-ticketing.git"
+  },
+  "author": {
+    "name": "James Russell Orola",
+    "email": "jamesorola@gmail.com",
+    "url": "https://devpedal.com"
+  },
+  "contributors": [
+    {
+      "name": "Kevin Jay Dela Cruz",
+      "email": "kj_delacruz28@yahoo.com"
+    },
+    {
+      "name": "Ronald Marcelo",
+      "email": "ronaldmrcl@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Singkomax/web3-live-event-ticketing/issues"
+  },
+  "homepage": "https://github.com/Singkomax/web3-live-event-ticketing#readme",
+  "engines": {
+    "node": "20.12.2"
+  }
+}
