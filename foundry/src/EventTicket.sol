@@ -2,12 +2,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { ERC721 } from '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import { Ownable } from '@openzeppelin/contracts/access/Ownable.sol';
+import { ERC721 } from '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import { ERC721URIStorage } from '@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol';
+import { Strings } from '@openzeppelin/contracts/utils/Strings.sol';
 
 contract EventTicket is ERC721URIStorage, Ownable {
+  using Strings for uint256;
+
   uint256 private _nextTokenId;
+  string private _baseTokenURI;
 
   struct TicketType {
     string name;
@@ -31,12 +35,14 @@ contract EventTicket is ERC721URIStorage, Ownable {
     string memory _eventName,
     string memory _eventDescription,
     uint256 _eventDate,
-    address _eventOrganizer
+    address _eventOrganizer,
+    string memory _baseURI
   ) ERC721(eventName, 'EVT') Ownable(_eventOrganizer) {
     eventName = _eventName;
     eventDescription = _eventDescription;
     eventDate = _eventDate;
     eventOrganizer = _eventOrganizer;
+    _baseTokenURI = _baseURI;
   }
 
   function mintTickets(
@@ -54,6 +60,13 @@ contract EventTicket is ERC721URIStorage, Ownable {
       for (uint256 j = 0; j < _ticketTypes[i].quantity; j++) {
         _nextTokenId++;
         _safeMint(eventOrganizer, _nextTokenId); // Mint to the event organizer
+        string memory tokenURI = string.concat(
+          _baseTokenURI,
+          _ticketTypes[i].name,
+          '/',
+          _nextTokenId.toString()
+        );
+        _setTokenURI(_nextTokenId, tokenURI);
         ticketTypeOfToken[_nextTokenId] = _ticketTypes[i].name;
       }
     }
