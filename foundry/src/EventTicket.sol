@@ -1,4 +1,3 @@
-// contracts/GameItem.sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
@@ -26,7 +25,7 @@ contract EventTicket is ERC721URIStorage, Ownable {
   mapping(uint256 => string) public ticketTypeOfToken;
 
   // Event information
-  string public eventName;
+  // string public eventName; -> stored in the name of the ERC721 token
   string public eventDescription;
   uint256 public eventDate;
   address public eventOrganizer;
@@ -37,17 +36,14 @@ contract EventTicket is ERC721URIStorage, Ownable {
     uint256 _eventDate,
     address _eventOrganizer,
     string memory _baseURI
-  ) ERC721(eventName, 'EVT') Ownable(_eventOrganizer) {
-    eventName = _eventName;
+  ) ERC721(_eventName, 'EVT') Ownable(_eventOrganizer) {
     eventDescription = _eventDescription;
     eventDate = _eventDate;
     eventOrganizer = _eventOrganizer;
     _baseTokenURI = _baseURI;
   }
 
-  function mintTickets(
-    TicketType[] memory _ticketTypes
-  ) public payable onlyOwner {
+  function mintTickets(TicketType[] memory _ticketTypes) public onlyOwner {
     if (_nextTokenId > 0) {
       revert('Tickets already minted');
     }
@@ -56,14 +52,18 @@ contract EventTicket is ERC721URIStorage, Ownable {
     for (uint256 i = 0; i < _ticketTypes.length; i++) {
       ticketTypes[_ticketTypes[i].name] = _ticketTypes[i];
 
+      string memory ticketTypeURI = string.concat(
+        _baseTokenURI,
+        _ticketTypes[i].name,
+        '/'
+      );
+
       // Pre-mint all tickets of this type
       for (uint256 j = 0; j < _ticketTypes[i].quantity; j++) {
         _nextTokenId++;
         _safeMint(eventOrganizer, _nextTokenId); // Mint to the event organizer
         string memory tokenURI = string.concat(
-          _baseTokenURI,
-          _ticketTypes[i].name,
-          '/',
+          ticketTypeURI,
           _nextTokenId.toString()
         );
         _setTokenURI(_nextTokenId, tokenURI);
