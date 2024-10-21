@@ -19,7 +19,7 @@ contract EventTicketTest is Test {
         );
     }
 
-    function test_EventInfo() public {
+    function test_EventInfo() public view {
         assertEq(eventTicket.name(), "Making your first NFT");
         assertEq(eventTicket.symbol(), "EVT");
         assertEq(
@@ -77,11 +77,11 @@ contract EventTicketTest is Test {
     function test_RevertWhenNotOwner() public {
         EventTicket.TicketType[]
             memory ticketTypes = new EventTicket.TicketType[](1);
-        ticketTypes[0] = EventTicket.TicketType(
-            "General Admission",
-            100,
-            1 ether
-        );
+        ticketTypes[0] = EventTicket.TicketType({
+            name: "Regular",
+            price: 100 ether,
+            quantity: 5
+        });
 
         vm.expectRevert(
             abi.encodeWithSelector(
