@@ -1,12 +1,29 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { useAuth0 } from '@auth0/auth0-react'
+import { useGetUserProfile } from './queries/auth0'
+import { useOnLogin } from './queries/quicknode-functions'
 
 function App() {
   const [count, setCount] = useState(0)
-  const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
+  const { loginWithRedirect, logout, isAuthenticated, isLoading, user } = useAuth0();
+
+  const userProfile = useGetUserProfile(user?.sub ?? '', {
+    enabled: !!user?.sub
+  })
+  const onLoginMutation = useOnLogin()
+
+
+  // this can be improved
+  useEffect(() => {
+    if (userProfile.data?.user_id && !userProfile.data?.user_metadata?.address) {
+      onLoginMutation.mutate(userProfile.data.user_id)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userProfile.data?.user_id])
+  
 
   if (isLoading) {
     return <div>Loading ...</div>;
@@ -35,19 +52,25 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
 
-      {isAuthenticated && user && (
+      {isAuthenticated && userProfile.data ? (
         <div>
-          <img src={user.picture} alt={user.name} />
-          <h2>{user.name}</h2>
-          <p>{user.email}</p>
+          {/* <img src={user.picture} alt={user.name} /> */}
+          <h2>{userProfile.data.name}</h2>
+          <p>{userProfile.data.email}</p>
+          <p>{userProfile.data.user_id}</p>
+          <p>{JSON.stringify(userProfile.data.user_metadata)}</p>
+
+          {/* <button onClick={onLoginClick}>
+            Trigger QuickNode
+          </button> */}
+
+          <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+            Log Out
+          </button>
         </div>
+      ) :  (
+        <button onClick={() => loginWithRedirect()}>Log In</button>
       )}
-
-      <button onClick={() => loginWithRedirect()}>Log In</button>
-
-      <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
-        Log Out
-      </button>
     </>
   )
 }
