@@ -25,19 +25,22 @@ contract EventTicket is ERC721URIStorage, Ownable {
     mapping(uint256 => string) public ticketTypeOfToken;
 
     // Event information
-    string public eventDescription;
-    uint256 public eventDate;
+    uint256 public eventStartDate;
+    uint256 public eventEndDate;
+    string public eventLocation;
     address public eventOrganizer;
 
     constructor(
         string memory _eventName,
-        string memory _eventDescription,
-        uint256 _eventDate,
+        uint256 _eventStartDate,
+        uint256 _eventEndDate,
+        string memory _eventLocation,
         address _eventOrganizer,
         string memory _baseURI
     ) ERC721(_eventName, "EVT") Ownable(_eventOrganizer) {
-        eventDescription = _eventDescription;
-        eventDate = _eventDate;
+        eventStartDate = _eventStartDate;
+        eventEndDate = _eventEndDate;
+        eventLocation = _eventLocation;
         eventOrganizer = _eventOrganizer;
         _baseTokenURI = _baseURI;
     }

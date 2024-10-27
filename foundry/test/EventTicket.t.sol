@@ -12,8 +12,9 @@ contract EventTicketTest is Test {
     function setUp() public {
         eventTicket = new EventTicket(
             "Making your first NFT",
-            "Learn how to make your first NFT",
+            1719849500,
             1719849600,
+            "Singapore",
             organizer,
             "https://mydomain.com/tickets/"
         );
@@ -22,11 +23,9 @@ contract EventTicketTest is Test {
     function test_EventInfo() public view {
         assertEq(eventTicket.name(), "Making your first NFT");
         assertEq(eventTicket.symbol(), "EVT");
-        assertEq(
-            eventTicket.eventDescription(),
-            "Learn how to make your first NFT"
-        );
-        assertEq(eventTicket.eventDate(), 1719849600);
+        assertEq(eventTicket.eventLocation(), "Singapore");
+        assertEq(eventTicket.eventStartDate(), 1719849500);
+        assertEq(eventTicket.eventEndDate(), 1719849600);
         assertEq(eventTicket.eventOrganizer(), organizer);
     }
 
