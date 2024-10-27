@@ -1,3 +1,6 @@
+import DummyAllEvents from './getAllEvents.json'
+import { AllEventsQnFuncResponse } from './types'
+
 const quicknodeDomain = 'https://api.quicknode.com/functions'
 
 export const onLogin = async (userId: string) => {
@@ -17,4 +20,9 @@ export const onLogin = async (userId: string) => {
   })
 
   return await res.json()
+}
+
+export const getAllEvents = async (filter?: string) => {
+  console.log(filter)
+  return DummyAllEvents as AllEventsQnFuncResponse
 }
