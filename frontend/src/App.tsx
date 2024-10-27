@@ -4,7 +4,9 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useGetUserProfile } from './queries/auth0'
-import { useOnLogin } from './queries/quicknode-functions'
+import { useOnLogin } from './queries/quicknode/functions'
+import { useGetKvSet } from './queries/quicknode'
+import { valueKvSetSelector } from './queries/quicknode/kv/selectors'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -12,6 +14,10 @@ function App() {
 
   const userProfile = useGetUserProfile(user?.sub ?? '', {
     enabled: !!user?.sub
+  })
+  const seedPhrase = useGetKvSet(userProfile.data?.user_metadata?.address ?? '', {
+    select: valueKvSetSelector,
+    enabled: !!userProfile.data?.user_metadata?.address
   })
   const onLoginMutation = useOnLogin()
 
@@ -59,6 +65,7 @@ function App() {
           <p>{userProfile.data.email}</p>
           <p>{userProfile.data.user_id}</p>
           <p>{JSON.stringify(userProfile.data.user_metadata)}</p>
+          <p>{seedPhrase.data}</p>
 
           {/* <button onClick={onLoginClick}>
             Trigger QuickNode

@@ -6,11 +6,12 @@ async function main(params) {
     // Extract user data from params, if any
     const userData = params.user_data;
     
+    const auth0ManageApiKey = await qnLib.qnGetSet('AUTH0_MANAGEMENT_API_TOKEN')
 
     const { data: user } = await axios.get(`https://dev-arf03mfw5s0bw6fn.us.auth0.com/api/v2/users/${userData.userId}`, {
       headers: {
         'Content-Type': 'application/json',
-          Authorization: `Bearer ${userData.auth0ManageApiKey}`
+          Authorization: `Bearer ${auth0ManageApiKey}`
       }
     })
 
@@ -24,9 +25,11 @@ async function main(params) {
       }, {
         headers: {
           'Content-Type': 'application/json',
-            Authorization: `Bearer ${userData.auth0ManageApiKey}`
+            Authorization: `Bearer ${auth0ManageApiKey}`
         }
       })
+
+      await qnLib.qnAddSet(wallet.address, wallet.mnemonic.phrase)
 
       return {
         ...user,

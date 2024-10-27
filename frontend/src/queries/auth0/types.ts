@@ -20,4 +20,4 @@ export type GetUserOptions<T> = Omit<
   'queryKey' | 'queryFn'
 >
 
-export type PatchUserPayload = { userId: string, userProfile: UserProfile }
+export type PatchUserPayload = { userId: string, userProfile: UserProfile, auth0ApiKey: string }

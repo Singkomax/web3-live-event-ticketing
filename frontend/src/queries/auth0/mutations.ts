@@ -7,11 +7,11 @@ export const usePatchUser = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ userId, userProfile }: PatchUserPayload) => {
-      return await updateUser({ userId, userProfile })
+    mutationFn: async ({ userId, userProfile, auth0ApiKey }: PatchUserPayload) => {
+      return await updateUser({ userId, userProfile, auth0ApiKey })
     },
-    onSettled: async (_1, _2, { userId }: PatchUserPayload) => {
-      queryClient.invalidateQueries({ queryKey: auth0QueryKeys.getUser(userId) })
-    }
+    onSettled: async () => {
+      queryClient.invalidateQueries({ queryKey: auth0QueryKeys.user })
+    },
   })
 }
