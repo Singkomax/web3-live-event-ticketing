@@ -31,10 +31,11 @@ export type QNFuncResponse<T> = {
     stream_id: string;
 }
 
-type TicketType = {
+export type TicketType = {
   name: string;
   price: number;
   quantity: number;
+  sold: number;
   imageUrl: string;
 };
 
@@ -45,6 +46,7 @@ export type TicketEvent = {
   endDate: number;
   location: string;
   imageUrl: string;
+  floorplanImageUrl: string;
   organizerAddress: string;
   contractAddress: string;
   ticketTypes: TicketType[];
@@ -54,7 +56,7 @@ export type AllEventsQnFuncResponse = QNFuncResponse<{ events: TicketEvent[] }>
 
 export type GetAllEventsOptions<T> = Omit<
   UseQueryOptions<
-  AllEventsQnFuncResponse,
+    AllEventsQnFuncResponse,
     unknown,
     T,
     ReturnType<typeof qnFuncQueryKeys.getAllEvents>

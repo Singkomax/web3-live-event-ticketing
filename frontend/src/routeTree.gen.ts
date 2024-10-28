@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
 import { Route as LayoutEventEventIdImport } from './routes/_layout/event/$eventId'
+import { Route as LayoutEventEventIdBuyImport } from './routes/_layout/event_/$eventId/buy'
 
 // Create/Update Routes
 
@@ -31,6 +32,12 @@ const LayoutIndexRoute = LayoutIndexImport.update({
 const LayoutEventEventIdRoute = LayoutEventEventIdImport.update({
   id: '/event/$eventId',
   path: '/event/$eventId',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutEventEventIdBuyRoute = LayoutEventEventIdBuyImport.update({
+  id: '/event_/$eventId/buy',
+  path: '/event/$eventId/buy',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -59,6 +66,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutEventEventIdImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/event_/$eventId/buy': {
+      id: '/_layout/event_/$eventId/buy'
+      path: '/event/$eventId/buy'
+      fullPath: '/event/$eventId/buy'
+      preLoaderRoute: typeof LayoutEventEventIdBuyImport
+      parentRoute: typeof LayoutImport
+    }
   }
 }
 
@@ -67,11 +81,13 @@ declare module '@tanstack/react-router' {
 interface LayoutRouteChildren {
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutEventEventIdRoute: typeof LayoutEventEventIdRoute
+  LayoutEventEventIdBuyRoute: typeof LayoutEventEventIdBuyRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutEventEventIdRoute: LayoutEventEventIdRoute,
+  LayoutEventEventIdBuyRoute: LayoutEventEventIdBuyRoute,
 }
 
 const LayoutRouteWithChildren =
@@ -81,11 +97,13 @@ export interface FileRoutesByFullPath {
   '': typeof LayoutRouteWithChildren
   '/': typeof LayoutIndexRoute
   '/event/$eventId': typeof LayoutEventEventIdRoute
+  '/event/$eventId/buy': typeof LayoutEventEventIdBuyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof LayoutIndexRoute
   '/event/$eventId': typeof LayoutEventEventIdRoute
+  '/event/$eventId/buy': typeof LayoutEventEventIdBuyRoute
 }
 
 export interface FileRoutesById {
@@ -93,14 +111,20 @@ export interface FileRoutesById {
   '/_layout': typeof LayoutRouteWithChildren
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/event/$eventId': typeof LayoutEventEventIdRoute
+  '/_layout/event_/$eventId/buy': typeof LayoutEventEventIdBuyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/' | '/event/$eventId'
+  fullPaths: '' | '/' | '/event/$eventId' | '/event/$eventId/buy'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/event/$eventId'
-  id: '__root__' | '/_layout' | '/_layout/' | '/_layout/event/$eventId'
+  to: '/' | '/event/$eventId' | '/event/$eventId/buy'
+  id:
+    | '__root__'
+    | '/_layout'
+    | '/_layout/'
+    | '/_layout/event/$eventId'
+    | '/_layout/event_/$eventId/buy'
   fileRoutesById: FileRoutesById
 }
 
@@ -131,7 +155,8 @@ export const routeTree = rootRoute
       "filePath": "_layout.tsx",
       "children": [
         "/_layout/",
-        "/_layout/event/$eventId"
+        "/_layout/event/$eventId",
+        "/_layout/event_/$eventId/buy"
       ]
     },
     "/_layout/": {
@@ -140,6 +165,10 @@ export const routeTree = rootRoute
     },
     "/_layout/event/$eventId": {
       "filePath": "_layout/event/$eventId.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/event_/$eventId/buy": {
+      "filePath": "_layout/event_/$eventId/buy.tsx",
       "parent": "/_layout"
     }
   }

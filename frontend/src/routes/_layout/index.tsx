@@ -83,7 +83,7 @@ const EventCard = ({ event }: { event: TicketEvent }) => {
 
   return (
     <Grid size={{ xs: 12, md: 6 }} key={event.id}>
-      <Link to={`/event/${event.id}`}>
+      <Link to={`/event/${event.id}`} style={{ textDecoration: 'none' }}>
         <SyledCard
           variant="outlined"
         >
