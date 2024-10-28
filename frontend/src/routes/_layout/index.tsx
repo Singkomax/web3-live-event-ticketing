@@ -1,3 +1,4 @@
+import { createFileRoute, Link } from '@tanstack/react-router'
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -12,10 +13,14 @@ import { styled } from '@mui/material/styles';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import AttachedMoneyIcon from '@mui/icons-material/AttachMoney';
-import { useGetAllEvents } from '../queries/quicknode/functions/queries';
-import { resultFunctionSelector } from '../queries/quicknode/functions/selectors';
-import { TicketEvent } from '../queries/quicknode/functions/types';
 import { useState } from 'react';
+import { TicketEvent } from '../../queries/quicknode/functions/types';
+import { useGetAllEvents } from '../../queries/quicknode/functions/queries';
+import { resultFunctionSelector } from '../../queries/quicknode/functions/selectors';
+
+export const Route = createFileRoute('/_layout/')({
+  component: Home,
+})
 
 const SyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -78,37 +83,39 @@ const EventCard = ({ event }: { event: TicketEvent }) => {
 
   return (
     <Grid size={{ xs: 12, md: 6 }} key={event.id}>
-      <SyledCard
-        variant="outlined"
-      >
-        <CardMedia
-          component="img"
-          alt="green iguana"
-          image={event.imageUrl}
-          sx={{
-            aspectRatio: '16 / 9',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-          }}
-        />
-        <SyledCardContent>
-          <Box alignSelf="flex-start">
-            <Typography gutterBottom variant="caption" component="div">
-              {startDateReadable} - {endDateReadable}
-            </Typography>
-            <Typography gutterBottom variant="h6" component="div">
-              {event.name}
-            </Typography>
-            <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-              {event.location}
-            </StyledTypography>
-          </Box>
-          <Box alignItems="center" justifyContent="center" sx={{ display: { xs: 'none', md: 'block' } }}>
-            <Typography gutterBottom variant="caption" fontSize="small" display="flex" justifyContent="flex-end" alignItems="center">{totalTickets} <LocalActivityIcon fontSize='small' /></Typography>
-            <Typography gutterBottom variant="caption" fontSize="small" display="flex" justifyContent="flex-end" alignItems="center">{lowestPrice} - {highestPrice} <AttachedMoneyIcon fontSize='small' /></Typography>
-          </Box>
-        </SyledCardContent>
+      <Link to={`/event/${event.id}`}>
+        <SyledCard
+          variant="outlined"
+        >
+          <CardMedia
+            component="img"
+            alt="green iguana"
+            image={event.imageUrl}
+            sx={{
+              aspectRatio: '16 / 9',
+              borderBottom: '1px solid',
+              borderColor: 'divider',
+            }}
+          />
+          <SyledCardContent>
+            <Box alignSelf="flex-start">
+              <Typography gutterBottom variant="caption" component="div">
+                {startDateReadable} - {endDateReadable}
+              </Typography>
+              <Typography gutterBottom variant="h6" component="div">
+                {event.name}
+              </Typography>
+              <StyledTypography variant="body2" color="text.secondary" gutterBottom>
+                {event.location}
+              </StyledTypography>
+            </Box>
+            <Box alignItems="center" justifyContent="center" sx={{ display: { xs: 'none', md: 'block' } }}>
+              <Typography gutterBottom variant="caption" fontSize="small" display="flex" justifyContent="flex-end" alignItems="center">{totalTickets} <LocalActivityIcon fontSize='small' /></Typography>
+              <Typography gutterBottom variant="caption" fontSize="small" display="flex" justifyContent="flex-end" alignItems="center">{lowestPrice} - {highestPrice} <AttachedMoneyIcon fontSize='small' /></Typography>
+            </Box>
+          </SyledCardContent>
         </SyledCard>
+      </Link>
     </Grid>
   )
 }
@@ -137,7 +144,7 @@ export function Search({ value, setValue }: { value: string, setValue: (val: str
   );
 }
 
-export default function Dashboard() {
+export default function Home() {
   const [searchString, setSearchString] = useState('')
   const allEvents = useGetAllEvents('', {
     select: (res) => {
@@ -217,3 +224,4 @@ export default function Dashboard() {
     </Box>
   );
 }
+
