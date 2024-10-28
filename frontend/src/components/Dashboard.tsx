@@ -10,8 +10,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import { styled } from '@mui/material/styles';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
+import AttachedMoneyIcon from '@mui/icons-material/AttachMoney';
 import { useGetAllEvents } from '../queries/quicknode/functions/queries';
 import { resultFunctionSelector } from '../queries/quicknode/functions/selectors';
+import { TicketEvent } from '../queries/quicknode/functions/types';
+import { useState } from 'react';
 
 const SyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -32,10 +36,9 @@ const SyledCard = styled(Card)(({ theme }) => ({
 
 const SyledCardContent = styled(CardContent)({
   display: 'flex',
-  flexDirection: 'column',
-  gap: 4,
+  flexDirection: 'row',
+  justifyContent: 'space-between',
   padding: 16,
-  flexGrow: 1,
   '&:last-child': {
     paddingBottom: 16,
   },
@@ -49,14 +52,77 @@ const StyledTypography = styled(Typography)({
   textOverflow: 'ellipsis',
 });
 
+const EventCard = ({ event }: { event: TicketEvent }) => {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }
+  const startDate = new Date(event.startDate * 1000)
+  const startDateReadable = startDate.toLocaleString('en-US', dateOptions)
 
-export function Search() {
+  const endDate = new Date(event.endDate * 1000)
+  const endDateReadable = endDate.toLocaleString('en-US', dateOptions)
+
+  const totalTickets = event.ticketTypes.reduce((total, ticket) => total + ticket.quantity, 0)
+
+  const [lowestPrice, highestPrice] = event.ticketTypes.reduce(
+    ([min, max], ticket) => [
+        Math.min(min, ticket.price),
+        Math.max(max, ticket.price)
+    ],
+    [Infinity, -Infinity] // Initial values for min and max
+)
+
+  return (
+    <Grid size={{ xs: 12, md: 6 }} key={event.id}>
+      <SyledCard
+        variant="outlined"
+      >
+        <CardMedia
+          component="img"
+          alt="green iguana"
+          image={event.imageUrl}
+          sx={{
+            aspectRatio: '16 / 9',
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+          }}
+        />
+        <SyledCardContent>
+          <Box alignSelf="flex-start">
+            <Typography gutterBottom variant="caption" component="div">
+              {startDateReadable} - {endDateReadable}
+            </Typography>
+            <Typography gutterBottom variant="h6" component="div">
+              {event.name}
+            </Typography>
+            <StyledTypography variant="body2" color="text.secondary" gutterBottom>
+              {event.location}
+            </StyledTypography>
+          </Box>
+          <Box alignItems="center" justifyContent="center" sx={{ display: { xs: 'none', md: 'block' } }}>
+            <Typography gutterBottom variant="caption" fontSize="small" display="flex" justifyContent="flex-end" alignItems="center">{totalTickets} <LocalActivityIcon fontSize='small' /></Typography>
+            <Typography gutterBottom variant="caption" fontSize="small" display="flex" justifyContent="flex-end" alignItems="center">{lowestPrice} - {highestPrice} <AttachedMoneyIcon fontSize='small' /></Typography>
+          </Box>
+        </SyledCardContent>
+        </SyledCard>
+    </Grid>
+  )
+}
+
+
+export function Search({ value, setValue }: { value: string, setValue: (val: string) => void}) {
   return (
     <FormControl sx={{ width: { xs: '100%', md: '25ch' } }} variant="outlined">
       <OutlinedInput
         size="small"
         id="search"
         placeholder="Search…"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
         sx={{ flexGrow: 1 }}
         startAdornment={
           <InputAdornment position="start" sx={{ color: 'text.primary' }}>
@@ -72,8 +138,22 @@ export function Search() {
 }
 
 export default function Dashboard() {
+  const [searchString, setSearchString] = useState('')
   const allEvents = useGetAllEvents('', {
-    select: resultFunctionSelector
+    select: (res) => {
+      const resObj = resultFunctionSelector(res)
+
+      if (!searchString || searchString.length < 4) {
+        return resObj
+      }
+
+      const events = resObj.events.filter(event => {
+        const srch = searchString.toLowerCase()
+        return event.name.toLowerCase().includes(srch) || event.location.toLowerCase().includes(srch)
+      })
+
+      return { events }
+    }
   })
 
   const handleClick = () => {
@@ -91,7 +171,7 @@ export default function Dashboard() {
           overflow: 'auto',
         }}
       >
-        <Search />
+        <Search value={searchString} setValue={setSearchString} />
       </Box>
       <Box
         sx={{
@@ -123,40 +203,16 @@ export default function Dashboard() {
             overflow: 'auto',
           }}
         >
-          <Search />
+          <Search value={searchString} setValue={setSearchString} />
         </Box>
       </Box>
       <Grid container spacing={2} columns={12}>
+        {!allEvents.data?.events.length && (
+          <Typography>No Events Found</Typography>
+        )}
         {allEvents.data?.events.map(event => (
-          <Grid size={{ xs: 12, md: 6 }} key={event.id}>
-            <SyledCard
-              variant="outlined"
-            >
-              <CardMedia
-                component="img"
-                alt="green iguana"
-                image={event.imageUrl}
-                sx={{
-                  aspectRatio: '16 / 9',
-                  borderBottom: '1px solid',
-                  borderColor: 'divider',
-                }}
-              />
-              <SyledCardContent>
-                <Typography gutterBottom variant="caption" component="div">
-                  {event.startDate} - {event.endDate}
-                </Typography>
-                <Typography gutterBottom variant="h6" component="div">
-                  {event.name}
-                </Typography>
-                <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-                  {event.location}
-                </StyledTypography>
-              </SyledCardContent>
-            </SyledCard>
-          </Grid>
+          <EventCard key={event.id} event={event} />
         ))}
-        
       </Grid>
     </Box>
   );

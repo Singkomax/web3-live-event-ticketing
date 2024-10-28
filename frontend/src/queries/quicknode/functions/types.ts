@@ -38,7 +38,7 @@ type TicketType = {
   imageUrl: string;
 };
 
-export type TicketEvents = {
+export type TicketEvent = {
   id: string;
   name: string;
   startDate: number;
@@ -50,7 +50,7 @@ export type TicketEvents = {
   ticketTypes: TicketType[];
 }
 
-export type AllEventsQnFuncResponse = QNFuncResponse<{ events: TicketEvents[] }>
+export type AllEventsQnFuncResponse = QNFuncResponse<{ events: TicketEvent[] }>
 
 export type GetAllEventsOptions<T> = Omit<
   UseQueryOptions<
