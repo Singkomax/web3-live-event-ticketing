@@ -21,6 +21,7 @@
             "endDate": 1735109750,
             "location": "Spotify",
             "imageUrl": "https://fastly.picsum.photos/id/799/800/450.jpg?hmac=jSRwu_ZdnCyDl2Pr5Z9PaqrbZZsrUizHIm9CFe8XwdE",
+            "floorplanImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu6g-6lBG-bBUXnEfk0-LHxEN-8PRlOmlozw&s",
             "organizerAddress": "0x6ec93658A189C826A40664fbB4a542763c0a4BbB",
             "contractAddress": "0x138D004eD7dc857dcFf640AE1dfEf1d1Fa69609d",
             "ticketTypes": [
@@ -28,12 +29,14 @@
                 "name": "General Admission",
                 "price": 10,
                 "quantity": 100,
+                "sold": 0,
                 "imageUrl": "https://fastly.picsum.photos/id/799/800/450.jpg?hmac=jSRwu_ZdnCyDl2Pr5Z9PaqrbZZsrUizHIm9CFe8XwdE"
               },
               {
                 "name": "VIP",
                 "price": 20,
                 "quantity": 50,
+                "sold": 0,
                 "imageUrl": "https://fastly.picsum.photos/id/799/800/450.jpg?hmac=jSRwu_ZdnCyDl2Pr5Z9PaqrbZZsrUizHIm9CFe8XwdE"
               }
             ]
@@ -47,17 +50,20 @@
             "organizerAddress": "0x6ec93658A189C826A40664fbB4a542763c0a4BbB",
             "contractAddress": "0x138D004eD7dc857dcFf640AE1dfEf1d1Fa69609d",
             "imageUrl": "https://fastly.picsum.photos/id/141/800/450.jpg?hmac=PsLB0p3Hu5wvugJxh529HD-dVR_XGTKb-7n03R6tCxg",
+            "floorplanImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu6g-6lBG-bBUXnEfk0-LHxEN-8PRlOmlozw&s",
             "ticketTypes": [
               {
                 "name": "General Admission",
                 "price": 12,
                 "quantity": 200,
+                "sold": 0,
                 "imageUrl": "https://fastly.picsum.photos/id/141/800/450.jpg?hmac=PsLB0p3Hu5wvugJxh529HD-dVR_XGTKb-7n03R6tCxg"
               },
               {
                 "name": "VIP",
                 "price": 25,
                 "quantity": 100,
+                "sold": 0,
                 "imageUrl": "https://fastly.picsum.photos/id/141/800/450.jpg?hmac=PsLB0p3Hu5wvugJxh529HD-dVR_XGTKb-7n03R6tCxg"
               }
             ]
